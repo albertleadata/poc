@@ -4,26 +4,36 @@ $pCfg = array(	'db_host' => 'pocdb',
 					'db_db' => 'poc',
 					'db_uid' => 'www',
 					'db_pwd' => 'h0ckeypuck' );
+$pDB = null;
 
-function connect() {
+function getDBCxn() {
 	global $pCfg;
-	$pCxn =	mysql_pconnect(	$pCfg['db_host'], $pCfg['db_uid'], $pCfg['db_pwd']) or trigger_error( mysql_error(), E_USER_ERROR);
-	mysql_select_db(	$pCfg['db_db']) or trigger_error( mysql_error(), E_USER_ERROR);
-	return;
-} 
+	$pRet = null;
+	$pCxn = mysqli_connect( $pCfg['db_host'], $pCfg['db_uid'], $pCfg['db_pwd'], $pCfg['db_db']);
+	if ( !mysqli_connect_errno()) {
+		$pRet = $pCxn;
+	} else error_log( "PoC WebGUI ERR: ".mysqli_connect_error());
+	return( $pRet);
+}
 
 function initDB() {
-	$sQry = "create table poc ( id bigint primary key auto_incrememt )";
-	mysql_query( $sQry);
+	global $pDB;
+	if ( $pDB != null) {
+		$sQry = "create table poc ( id bigint primary key auto_incrememt )";
+		mysqli_query( $pDB, $sQry);
+	}
 	return;
 }
 
 function addNewItm() {
+	global $pDB;
 	$lRet = 0;
-	$sQry = "insert into poc";
-//	echo "DEBUG - Insertion query:<br>".$sQry."<br><br>";
-	if ( mysql_query( $sQry)) {
-		$lRet = mysql_insert_id();
+	if ( $pDB != null) {
+		$sQry = "insert into poc";
+	//	echo "DEBUG - Insertion query:<br>".$sQry."<br><br>";
+		if ( mysqli_query( $pDB, $sQry)) {
+			$lRet = mysqli_insert_id( $pDB);
+		}
 	}
 	return( $lRet);
 }
@@ -39,20 +49,25 @@ function genAddForm() {
 }
 
 function genListing() {
+	global $pDB;
 	$sRet = "<table align=center>\n";
-	$sQry = "select * from poc order by id";
-//	echo "<br>Query:<br>".$sQry."<br><br>\n";
-	$pRslt = mysql_query( $sQry);
-	while ( $pRow = mysql_fetch_assoc( $pRslt)) {
-		$sRet .= sprintf( "<tr><td>%d</td></tr>\n", intval($pRow['id']));
-	}
-	mysql_free_result( $pRslt);
-	$sRet .= "\n";
+	if ( $pDB != null) {
+		$sQry = "select * from poc order by id";
+	//	echo "<br>Query:<br>".$sQry."<br><br>\n";
+		if ( $pRslt = mysqli_query( $pDB, $sQry)) {
+			while ( $pRow = mysqli_fetch_assoc( $pRslt)) {
+				$sRet .= sprintf( "<tr><td>%d</td></tr>\n", intval($pRow['id']));
+			}
+			mysqli_free_result( $pRslt);
+		}
+	} // else  printf( "ERR: %s\n", mysqli_connect_error());
 	$sRet .= "</table>\n";
 	return( $sRet);
 }
 
 function genPage( $sCtx) {
+	global $pDB;
+	$pDB = getDBCxn();
 	if ( $sCtx == "initdb") {
 		initDB();
 		addNewItm();
