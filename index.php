@@ -1,6 +1,6 @@
 <?php
 
-$pCfg = array(	'db_host' => 'pocdb',
+$pCfg = array(	'db_host' => 'mariadb-persistent',
 					'db_db' => 'poc',
 					'db_uid' => 'www',
 					'db_pwd' => 'h0ckeypuck' );
