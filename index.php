@@ -1,6 +1,6 @@
 <?php
 
-$pCfg = array(	'db_host' => 'mariadb-persistent',
+$pCfg = array(	'db_host' => 'pocdb.poc.svc',
 					'db_db' => 'poc',
 					'db_uid' => 'www',
 					'db_pwd' => 'h0ckeypuck' );
@@ -42,7 +42,7 @@ function genAddForm() {
 	$sRet = "<form method=post action=index.php>\n";
 	$sRet .= "<input type=hidden name=ctx value=itmadd>\n";
 	$sRet .= "<table align=center>\n";
-	$sRet .= "<tr><td align=center><input type=submit value=Add</td></tr>\n";
+	$sRet .= "<tr><td align=center><input type=submit value=Add></td></tr>\n";
 	$sRet .= "</table>\n";
 	$sRet .= "</form>\n";
 	return( $sRet);
