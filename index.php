@@ -19,7 +19,7 @@ function getDBCxn() {
 function initDB() {
 	global $pDB;
 	if ( $pDB != null) {
-		$sQry = "create table poc ( id bigint primary key auto_incrememt )";
+		$sQry = "create table poc ( id bigint primary key auto_increment, created datetime )";
 		mysqli_query( $pDB, $sQry);
 	}
 	return;
@@ -29,7 +29,7 @@ function addNewItm() {
 	global $pDB;
 	$lRet = 0;
 	if ( $pDB != null) {
-		$sQry = "insert into poc";
+		$sQry = "insert into poc (created) values (now())";
 	//	echo "DEBUG - Insertion query:<br>".$sQry."<br><br>";
 		if ( mysqli_query( $pDB, $sQry)) {
 			$lRet = mysqli_insert_id( $pDB);
