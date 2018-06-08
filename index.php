@@ -1,6 +1,6 @@
 <?php
 
-$pCfg = array(	'db_host' => 'pocdb.poc.svc',
+$pCfg = array(	'db_host' => '172.17.0.5',
 					'db_db' => 'poc',
 					'db_uid' => 'www',
 					'db_pwd' => 'h0ckeypuck' );
